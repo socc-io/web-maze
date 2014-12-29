@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<title>WEB-MAZE</title>
+
+		<!-- Bootstrap core CSS -->
+		<link href="dist/css/bootstrap.min.css" rel="stylesheet">
+
+		<!-- Custom styles for this template -->
+		<link href="css/sticky-footer-navbar.css" rel="stylesheet">
+
+	</head>
+
+	<body>
+
+		<!-- Fixed navbar -->
+		<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" href="#"><b>WEB-MAZE</b></a>
+				</div>
+				<div id="navbar" class="collapse navbar-collapse">
+					<ul class="nav navbar-nav">
+						<li class="active" id="nav_game">
+							<a href="#" onclick="goto_game();">GAME</a>
+						</li> 
+						<li id="nav_rank">
+							<a href="#" onclick="goto_rank();">RANK</a>
+						</li>
+					</ul>
+					<form class="navbar-form navbar-left" role="search">
+						<div class="form-group">
+							<input type="text" class="form-control" placeholder="ID" id="id">
+							<input type="text" class="form-control" placeholder="ANSWER" id="answer">
+						</div>
+						
+					</form>
+					<button class="btn btn-success navbar-btn" id="submit">
+							SUBMIT
+					</button>
+				</div><!--/.nav-collapse -->
+
+			</div>
+		</nav>
+
+		<!-- Begin game content -->
+		<div class="container" id="game">
+			<div class="page-header" id="game_title">
+				<h1>웹 메이즈에 오신것을 환영합니다</h1>
+			</div>
+			<p class="lead" id="game_content">
+				  웹 메이즈는 웹해킹 입문자들이 재미있게 게임을 하며 배울 수 있도록, 여러가지 넌센스와 웹해킹 트릭을 섞어만든 미궁탈출 게임입니다. 
+				  게임을 하는 방법은 각 페이지에서 "유추되는" 답을 상단 메뉴바에 있는 <code>ANSWER</code>란에 적으시고, <code>SUBMIT</code>을 눌러주시면 됩니다.
+				이어서 게임을 하고 싶으시다면, <code>ID</code>와 해당 문제의 <code>ANSWER</code>를 꼭 기억해주세요
+				
+				<br><br>
+				자 그럼, 첫번째 문제가 나갑니다. 뭐? 벌써 문제가 나왔다고요? 아.. 예 알겠습니다. 그럼 20000.
+			</p>
+			<p>
+				주의- ID는 한번 정해지면 해당 IP의 고유명이 되므로 주의 하시기 바랍니다. 바꿀수 없다는 뜻입니다.
+			</p>
+		</div>
+		
+		<!-- End game content -->
+		
+		<!-- Begin Rank -->
+		<div class="container" id="rank">
+		<ul class="list-group" id="rank_list">
+  			
+		</ul>
+		</div>
+		
+		<!-- End Rank -->
+
+		<footer class="footer">
+			<div class="container">
+				<p class="text-muted">
+					developed by becxer - 스포는 노잼의 지름길입니다
+				</p>
+			</div>
+		</footer>
+
+		<!-- Bootstrap core JavaScript
+		================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<script src="../../dist/js/bootstrap.min.js"></script>
+		
+		<script>
+
+		$(document).ready(function(){
+			
+			goto_game = function(){
+				id = $("#id").val();
+				answer = $("#answer").val();
+				goto_level(id,answer);
+			};
+			
+			goto_rank = function(){
+				$("#game").hide();
+				$("#rank").show();
+				$("#nav_rank").attr('class','active');
+				$("#nav_game").attr('class','');
+			
+				$.get("rank",function(data, status){
+					if(status == "success"){
+						//alert("Data: " + data + "\nStatus: " + status);
+						prefix =  '<li class="list-group-item"><span class="badge">';
+						midfix = '</span><h3>';
+						posfix = '</h3></li>';
+						
+						ranker = "";
+						list = data.split(',');
+						for( x in list){
+							nd = list[x].split(':');
+							name = nd[0];
+							rank = nd[1];
+							ranker += (prefix+rank+midfix+name+posfix);
+						}
+						$("#rank").html(ranker);
+					}
+				});
+			};
+			
+			goto_level = function(id, answer){
+				$("#game").show();
+				$("#rank").hide();
+				$("#nav_game").attr('class','active');
+				$("#nav_rank").attr('class','');
+				
+				$.get("maze?id="+id+"&ans="+answer,function(data, status){
+					if(status == "success" && data != "FALSE"){
+						
+						$("#game").html(data);
+					}else{
+						if(id.length < 5){
+							alert("아이디 길이가 너무 짧습니다");
+						}else{
+							alert("답이 틀렸습니다");
+						}
+					}
+				});
+			};
+			
+			$("#submit").click(function(){
+				goto_game();
+			});
+			
+			$("#answer").keyup(function(e){
+				if(e.which == 13) { goto_game();}
+			});
+			
+			refresh_rank = function(){
+				goto_rank();
+				console.log("refreshing..");
+				setTimeout('refresh_rank()',1000);
+			}
+			
+		});	
+		
+
+		</script>
+	</body>
+</html>

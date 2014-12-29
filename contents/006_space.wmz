@@ -1,0 +1,19 @@
+<div class="page-header" id="game_title">
+	<h1>아하하 권한이 없으면 볼수가 없다라..</h1>
+</div>
+<p class="lead" id="game_content">
+
+요즘 미생을 즐겨보시죠? 어떠시던가요. 회사생활이랑 많이 비슷하던 가요?
+저같은 경우는 너무 똑같은 나머지 소름이 돋더군요.
+
+관료주의가 나쁘다고 나쁘다고 하지만 뭐 어쩌겠습니까 회사에서는 계급이 장땡인 부분이
+없잖아 있기 마련이죠. 이 문제도 마찬가지인거 같아요. 권한이 없으면 볼수가 없더군요.
+콘솔을 보세요 ㅎㅎ.
+
+<script>show_answer = function(level){if(level>4){console.log('answer:'+document.COMMENT_NODE.__lookupGetter__.hasOwnProperty());}else{console.log("권한이 없습니다.");}};show_answer(3);</script>
+
+
+
+</p>
+
+
